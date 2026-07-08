@@ -3,7 +3,12 @@ name: Build Nojoom Mobile APK
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'ci-logs/**'
   workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -41,6 +46,17 @@ jobs:
           echo '```' >> "$GITHUB_STEP_SUMMARY"
           tail -n 200 build_output.log >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit build log for inspection
+        if: always()
+        run: |
+          mkdir -p ci-logs
+          cp build_output.log ci-logs/last_build.log
+          git config user.email "ci@nojoom.local"
+          git config user.name "Nojoom CI"
+          git add ci-logs/last_build.log
+          git commit -m "CI: update build log [skip ci]" || echo "no changes"
+          git push origin HEAD:main || echo "push failed"
 
       - name: Fail job if build failed
         if: steps.build.outputs.exit_code != '0'
