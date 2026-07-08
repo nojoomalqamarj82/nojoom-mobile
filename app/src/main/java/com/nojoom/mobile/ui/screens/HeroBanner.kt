@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -133,8 +134,8 @@ fun HeroBanner(title: String, subtitle: String, modifier: Modifier = Modifier) {
 
                 val body = Path().apply {
                     moveTo(fx - s, fy)
-                    quadraticTo(fx - s * 0.3f, fy - s * 0.6f, fx + s, fy)
-                    quadraticTo(fx - s * 0.3f, fy + s * 0.6f, fx - s, fy)
+                    quadraticBezierTo(fx - s * 0.3f, fy - s * 0.6f, fx + s, fy)
+                    quadraticBezierTo(fx - s * 0.3f, fy + s * 0.6f, fx - s, fy)
                     close()
                 }
                 drawPath(body, color = fish.color.copy(alpha = 0.85f))
